@@ -106,6 +106,26 @@ check('persiste en localStorage', w.localStorage.getItem('recetario-cafe-v1')?.i
 // 12. En un navegador no se activa el modo nativo
 check('sin Capacitor no hay modo nativo', !doc.documentElement.dataset.native);
 
+// 13. El encabezado tapa el contenido y absorbe el área segura (regresión)
+const css = doc.querySelector('style').textContent;
+const decls = (sel) => {
+  const body = new RegExp(sel + '\\{([^}]*)\\}').exec(css)?.[1] ?? '';
+  const out = {};
+  for (const d of body.split(';')) {
+    const i = d.indexOf(':');
+    if (i > 0) out[d.slice(0, i).trim()] = d.slice(i + 1).trim();
+  }
+  return out;
+};
+const h = decls('header');
+const asideZ = Number(decls('aside')['z-index']);
+check('encabezado sticky pegado arriba', h.position === 'sticky' && h.top === '0', `${h.position}/${h.top}`);
+check('encabezado por encima del contenido', Number(h['z-index']) >= 10, h['z-index']);
+check('encabezado absorbe el área segura', /calc\(12px \+ var\(--sat\)\)/.test(h.padding ?? ''), h.padding);
+check('encabezado con fondo sólido', !!h.background && !/rgba|transparent|#[0-9a-f]{8}/i.test(h.background), h.background);
+check('el html ya no reserva la franja superior', !/padding-top:var\(--sat\)/.test(css));
+check('el menú lateral sigue por encima del encabezado', asideZ > Number(h['z-index']), `${asideZ} > ${h['z-index']}`);
+
 console.log(results.join('\n'));
 if (errors.length) {
   console.log('\nerrores de consola:\n' + errors.join('\n'));

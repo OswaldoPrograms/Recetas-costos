@@ -17,19 +17,22 @@
 <style>
 :root{--bg:#f8efe0;--paper:#fff7ea;--ink:#5a4a3f;--soft:#8f7f71;--line:#eadfce;--sage:#dbe5cf;--sage2:#a9bf93;--peach:#f7ddc8;--butter:#f8ecc4;--rose:#f0d3cc;--rust:#c98b6a;color-scheme:light;
 --sat:var(--safe-area-inset-top,env(safe-area-inset-top,0px));--sab:var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px));--sal:var(--safe-area-inset-left,env(safe-area-inset-left,0px));--sar:var(--safe-area-inset-right,env(safe-area-inset-right,0px));
-box-sizing:border-box;padding-top:var(--sat);padding-bottom:var(--sab)}
+box-sizing:border-box;padding-bottom:var(--sab)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2b2622;--paper:#342e29;--ink:#f1e7da;--soft:#b9a999;--line:#4a4139;--sage:#44503d;--sage2:#8fa77a;--peach:#5a4536;--butter:#5a5033;--rose:#59403c;--rust:#e0a583;color-scheme:dark}}
-*{box-sizing:border-box}html{scroll-padding-top:var(--sat)}
+*{box-sizing:border-box}html{scroll-padding-top:calc(70px + var(--sat))}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Nunito,system-ui,sans-serif;min-height:100vh}
 h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:700;margin:0;line-height:1.2}
 .hand{font-family:Caveat,cursive;font-weight:700;color:var(--rust)}
-header{position:sticky;top:var(--sat);z-index:5;display:flex;align-items:center;gap:12px;padding:12px 18px;background:var(--bg);border-bottom:2px dashed var(--line)}
+/* El encabezado se pega al borde de la ventana y absorbe el área segura en su
+   propio relleno: así su fondo cubre también la franja de la barra de estado y
+   ningún contenido puede asomar por encima al hacer scroll. */
+header{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;padding:calc(12px + var(--sat)) 18px 12px;background:var(--bg);border-bottom:2px dashed var(--line)}
 header h1{font-size:1.25rem;flex:1}
 button,input,select,textarea{font:inherit;color:inherit}
 .menu{width:44px;height:44px;border:0;border-radius:14px 14px 4px 14px;background:var(--peach);cursor:pointer;font-size:1.3rem}
-.scrim{position:fixed;inset:0;background:#3a2c2044;opacity:0;pointer-events:none;transition:.25s;z-index:8}
+.scrim{position:fixed;inset:0;background:#3a2c2044;opacity:0;pointer-events:none;transition:.25s;z-index:20}
 .scrim.on{opacity:1;pointer-events:auto}
-aside{position:fixed;top:0;bottom:0;left:0;width:270px;max-width:82vw;background:var(--paper);z-index:9;transform:translateX(-102%);transition:transform .28s;padding:calc(24px + var(--sat)) 18px 24px;border-right:2px dashed var(--line);overflow-y:auto}
+aside{position:fixed;top:0;bottom:0;left:0;width:270px;max-width:82vw;background:var(--paper);z-index:21;transform:translateX(-102%);transition:transform .28s;padding:calc(24px + var(--sat)) 18px 24px;border-right:2px dashed var(--line);overflow-y:auto}
 aside.r{left:auto;right:0;width:420px;max-width:94vw;transform:translateX(102%);border-right:0;border-left:2px dashed var(--line)}
 aside.on{transform:none}
 aside .brand{font-size:1.5rem;margin-bottom:2px}
@@ -72,6 +75,9 @@ details.panel>summary{cursor:pointer;list-style:none;display:flex;align-items:ce
 .cup{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line)}.cup span{flex:1;min-width:0}.cup input{width:110px;text-align:right}.cup.miss input{border-color:var(--rust)}
 label{display:block;font-size:.85rem;font-weight:700;margin-bottom:4px;color:var(--soft)}
 input,select,textarea{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg)}
+/* El selector de fotos nativo viene con estilo del sistema: lo alineamos con la app */
+input[type=file]{padding:8px 10px;font-size:.9rem;border-style:dashed}
+input[type=file]::file-selector-button{font:inherit;font-weight:700;border:0;border-radius:8px;padding:8px 14px;margin-right:10px;background:var(--sage);color:var(--ink);cursor:pointer}
 input[type=checkbox]{width:auto}
 .chk{display:flex;gap:8px;align-items:center;font-weight:600;color:var(--ink);margin:6px 0}
 .f{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:12px}

@@ -102,6 +102,11 @@ Tiempo aproximado: 5–8 minutos la primera vez (descarga Gradle y el SDK).
 Antes de compilar, el Action ejecuta `npm test`: si un cambio en la app la deja
 rota, el build falla ahí y no genera un APK defectuoso.
 
+El workflow guarda en caché la **firma de depuración** (`debug-keystore-v1`), así
+que los APK de ejecuciones distintas se instalan unos encima de otros como una
+actualización normal y conservan tus recetas. Si algún día borras esa caché, el
+APK nuevo tendrá otra firma: Android pedirá desinstalar el anterior.
+
 ### Versión de publicación (Release)
 
 Al subir un tag que empiece con `v`, se compila la versión `release` y se adjunta
@@ -209,6 +214,9 @@ Modifica `scripts/make-icons.py` si quieres otra imagen, o reemplaza a mano
 - **Botón atrás de Android:** cierra primero el menú, los desplegables y las
   ventanas; desde el detalle vuelve a la lista y solo sale de la app cuando ya
   estás en *Mis recetas*.
+- **Encabezado fijo de verdad:** se pega al borde superior y su relleno incluye
+  el área segura, así el fondo cubre también la franja de la barra de estado y
+  nada se ve pasar por encima al hacer scroll.
 - **Toques y rebote:** se desactivó el zoom por doble toque, el resaltado azul de
   los enlaces y el rebote elástico del scroll.
 - **Iconos:** adaptativos (fondo verde salvia + libro), con versiones redondas y
@@ -236,6 +244,7 @@ en un correo o nota. Para restaurar, pégalo y pulsa **Cargar respaldo**.
 | `Unsupported class file major version` | Usa JDK 21 (`java -version`) |
 | El Action falla en `npm ci` | Borra `package-lock.json`, haz `npm install` y vuelve a subirlo |
 | Android bloquea la instalación | Ajustes → permitir instalar apps de esa fuente; o `adb install` |
+| "Aplicación no instalada" al actualizar | El APK está firmado con otra clave: desinstala la versión anterior (respalda antes en *Configuración → Respaldo*) |
 | `cap sync` no encuentra `www` | Ejecuta los comandos desde la raíz del proyecto |
 | `Failed to find package 'tools'` en el Action | `setup-android` pedía ese paquete, ya retirado del SDK. El workflow fija `packages: platform-tools`; no lo quites |
 
