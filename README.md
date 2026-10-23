@@ -16,6 +16,7 @@ pantalla completa.
 | `www/index.html` | **La app** (copia de trabajo; edita aquí de ahora en adelante) |
 | `www/fonts/` | Tipografías Caveat, Fraunces y Nunito alojadas localmente (offline) |
 | `www/icons/`, `www/manifest.webmanifest` | Iconos y manifiesto para instalarla también como PWA |
+| `assets/icon.svg` | El logo vectorial; de aquí salen todos los iconos y el splash |
 | `capacitor.config.json` | Configuración de Capacitor (id de app, nombre, barras del sistema) |
 | `android/` | Proyecto Android nativo, listo para Android Studio |
 | `.github/workflows/android.yml` | Compila el APK en GitHub y publica Releases |
@@ -185,15 +186,18 @@ instalarla se considera otra app. Debe cambiarse en tres sitios:
 
 El nombre visible está en `android/app/src/main/res/values/strings.xml` (`app_name`).
 
-**Iconos y pantalla de inicio.** Se generan con un script (requiere Python 3 +
-Pillow):
+**Iconos y pantalla de inicio.** Salen del logo vectorial `assets/icon.svg`
+(la ilustración del libro de recetas). Si cambias el logo, vuelve a generar
+todos los tamaños con:
 
 ```bash
 npm run icons
 ```
 
-Modifica `scripts/make-icons.py` si quieres otra imagen, o reemplaza a mano
-`android/app/src/main/res/mipmap-*/ic_launcher*.png`.
+El script recorta el icono adaptativo, el redondo, el de la PWA y las pantallas
+de inicio de todas las densidades. El color de fondo está en
+`android/app/src/main/res/values/ic_launcher_background.xml` (debe ser el mismo
+crema del logo: `#FAEACF`).
 
 **Colores del sistema.** `android/app/src/main/res/values/colors.xml`.
 
@@ -219,8 +223,8 @@ Modifica `scripts/make-icons.py` si quieres otra imagen, o reemplaza a mano
   nada se ve pasar por encima al hacer scroll.
 - **Toques y rebote:** se desactivó el zoom por doble toque, el resaltado azul de
   los enlaces y el rebote elástico del scroll.
-- **Iconos:** adaptativos (fondo verde salvia + libro), con versiones redondas y
-  pantallas de inicio para todas las densidades.
+- **Iconos:** el logo del libro de recetas, en versión adaptativa, redonda y para
+  PWA, más pantallas de inicio para todas las densidades.
 
 ---
 

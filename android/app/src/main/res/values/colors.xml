@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Colores de marca (sustituyen a los de la librería de Capacitor). -->
 <resources>
-    <color name="colorPrimary">#DBE5CF</color>
-    <color name="colorPrimaryDark">#F8EFE0</color>
-    <color name="colorAccent">#C98B6A</color>
+    <!-- El crema del logo: la pantalla de inicio y la barra de estado combinan -->
+    <color name="colorPrimary">#FAEACF</color>
+    <color name="colorPrimaryDark">#FAEACF</color>
+    <color name="colorAccent">#D07234</color>
 </resources>
