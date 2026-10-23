@@ -1,0 +1,165 @@
+name: Android
+
+on:
+  push:
+    branches: [main, master]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+# Permite publicar el APK como Release al empujar un tag v*
+permissions:
+  contents: write
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Secretos opcionales para firmar la versión de publicación.
+  # Configúralos en Settings → Secrets and variables → Actions.
+  KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+  ORG_GRADLE_PROJECT_RELEASE_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+  ORG_GRADLE_PROJECT_RELEASE_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+  ORG_GRADLE_PROJECT_RELEASE_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+jobs:
+  apk:
+    name: APK instalable
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Configurar Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Configurar Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Aceptar licencias del SDK
+        run: yes | sdkmanager --licenses > /dev/null 2>&1 || true
+
+      - name: Instalar dependencias
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+      - name: Probar la app (sin navegador)
+        run: npm test
+
+      - name: Sincronizar web → Android
+        run: |
+          if [ ! -d android ]; then npx cap add android; fi
+          npx cap sync android
+
+      - name: Compilar APK de depuración
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Subir APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: mi-recetario-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
+
+  release:
+    name: APK/AAB de publicación
+    # Solo al empujar un tag tipo v1.0.0
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Configurar Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Configurar Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Aceptar licencias del SDK
+        run: yes | sdkmanager --licenses > /dev/null 2>&1 || true
+
+      - name: Instalar dependencias
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+      - name: Probar la app (sin navegador)
+        run: npm test
+
+      - name: Sincronizar web → Android
+        run: |
+          if [ ! -d android ]; then npx cap add android; fi
+          npx cap sync android
+
+      - name: Calcular versión desde el tag
+        id: version
+        run: |
+          echo "name=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          echo "code=${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+
+      - name: Restaurar keystore
+        if: env.KEYSTORE_B64 != ''
+        run: printf '%s' "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.keystore"
+
+      - name: Compilar release firmado
+        if: env.KEYSTORE_B64 != ''
+        working-directory: android
+        env:
+          ORG_GRADLE_PROJECT_RELEASE_STORE_FILE: ${{ runner.temp }}/release.keystore
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease bundleRelease --no-daemon \
+            -PVERSION_NAME=${{ steps.version.outputs.name }} \
+            -PVERSION_CODE=${{ steps.version.outputs.code }}
+
+      - name: Compilar release sin firmar
+        if: env.KEYSTORE_B64 == ''
+        working-directory: android
+        run: |
+          echo "::warning::No hay secretos de firma; se genera un APK sin firmar."
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon \
+            -PVERSION_NAME=${{ steps.version.outputs.name }} \
+            -PVERSION_CODE=${{ steps.version.outputs.code }}
+
+      - name: Reunir artefactos
+        run: |
+          mkdir -p out
+          name="${{ steps.version.outputs.name }}"
+          if [ -f android/app/build/outputs/apk/release/app-release.apk ]; then
+            cp android/app/build/outputs/apk/release/app-release.apk "out/mi-recetario-${name}.apk"
+          else
+            cp android/app/build/outputs/apk/release/app-release-unsigned.apk "out/mi-recetario-${name}-sin-firma.apk"
+          fi
+          if [ -f android/app/build/outputs/bundle/release/app-release.aab ]; then
+            cp android/app/build/outputs/bundle/release/app-release.aab "out/mi-recetario-${name}.aab"
+          fi
+          ls -lh out
+
+      - name: Publicar Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: out/*
+          generate_release_notes: true
+          fail_on_unmatched_files: false

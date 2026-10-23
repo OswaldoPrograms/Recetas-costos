@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mi recetario</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f8efe0;--paper:#fff7ea;--ink:#5a4a3f;--soft:#8f7f71;--line:#eadfce;--sage:#dbe5cf;--sage2:#a9bf93;--peach:#f7ddc8;--butter:#f8ecc4;--rose:#f0d3cc;--rust:#c98b6a;color-scheme:light;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2b2622;--paper:#342e29;--ink:#f1e7da;--soft:#b9a999;--line:#4a4139;--sage:#44503d;--sage2:#8fa77a;--peach:#5a4536;--butter:#5a5033;--rose:#59403c;--rust:#e0a583;color-scheme:dark}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Nunito,system-ui,sans-serif;min-height:100vh}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:700;margin:0;line-height:1.2}
+.hand{font-family:Caveat,cursive;font-weight:700;color:var(--rust)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;align-items:center;gap:12px;padding:12px 18px;background:var(--bg);border-bottom:2px dashed var(--line)}
+header h1{font-size:1.25rem;flex:1}
+button,input,select,textarea{font:inherit;color:inherit}
+.menu{width:44px;height:44px;border:0;border-radius:14px 14px 4px 14px;background:var(--peach);cursor:pointer;font-size:1.3rem}
+.scrim{position:fixed;inset:0;background:#3a2c2044;opacity:0;pointer-events:none;transition:.25s;z-index:8}
+.scrim.on{opacity:1;pointer-events:auto}
+aside{position:fixed;top:0;bottom:0;left:0;width:270px;max-width:82vw;background:var(--paper);z-index:9;transform:translateX(-102%);transition:transform .28s;padding:calc(24px + env(safe-area-inset-top,0px)) 18px 24px;border-right:2px dashed var(--line);overflow-y:auto}
+aside.r{left:auto;right:0;width:420px;max-width:94vw;transform:translateX(102%);border-right:0;border-left:2px dashed var(--line)}
+aside.on{transform:none}
+aside .brand{font-size:1.5rem;margin-bottom:2px}
+aside nav{margin-top:22px;display:grid;gap:8px}
+aside nav button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:11px 14px;border:0;border-radius:12px 4px 12px 4px;background:transparent;cursor:pointer;font-weight:600}
+aside nav button.cur{background:var(--sage)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--sage2);outline-offset:2px}
+main{max-width:900px;margin:0 auto;padding:22px 18px 70px}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.top h2{font-size:1.7rem}
+.btn{border:0;border-radius:12px;padding:10px 18px;background:var(--sage);cursor:pointer;font-weight:700}
+.btn.alt{background:var(--peach)}.btn.ghost{background:transparent;border:2px dashed var(--line)}.btn.sm{padding:6px 12px;font-size:.88rem}
+.btn:hover{filter:brightness(.97)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+.card{position:relative;background:var(--paper);border:1.5px solid var(--line);border-radius:6px 20px 20px 6px;padding:0 0 14px;cursor:pointer;text-align:left;width:100%;overflow:hidden;box-shadow:4px 5px 0 var(--line)}
+.card::before{content:"";position:absolute;left:7px;top:0;bottom:0;border-left:2px dotted var(--sage2);z-index:2}
+.card::after{content:"";position:absolute;right:16px;top:-6px;width:48px;height:18px;background:var(--tape,var(--butter));transform:rotate(4deg);border-radius:2px;z-index:2}
+.ph{height:150px;background:var(--tape,var(--butter));display:grid;place-items:center;font-size:2.6rem}
+.card img.ph,img.hero{width:100%;object-fit:cover;display:block}
+.card .b{padding:12px 16px 0 22px}
+.card h3{font-size:1.15rem;margin-bottom:8px}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{background:var(--bg);border:1.5px solid var(--line);border-radius:99px;padding:2px 10px;font-size:.82rem}
+.hero{height:260px;border-radius:22px 22px 6px 22px;margin-bottom:16px}
+div.hero{background:var(--butter);display:grid;place-items:center;font-size:4rem}
+.panel{background:var(--paper);border:1.5px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:14px 0}
+.stat{border-radius:16px 16px 16px 4px;padding:12px 14px}
+.stat small{display:block;color:var(--soft);font-size:.8rem}.stat strong{font-family:Fraunces,serif;font-size:1.3rem}
+.s0{background:var(--sage)}.s1{background:var(--peach)}.s2{background:var(--butter)}.s3{background:var(--rose)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media(max-width:700px){.two{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px 6px;border-bottom:1px dashed var(--line);vertical-align:top}th{font-size:.82rem;color:var(--soft);font-weight:600}td.r,th.r{text-align:right}
+.note .btn{font:700 .9rem Nunito,system-ui,sans-serif;margin-left:6px}
+main{overflow-wrap:anywhere}
+.li{display:flex;gap:10px;align-items:baseline;padding:11px 0;border-bottom:1px dashed var(--line)}.li:last-child{border-bottom:0}.li .n{flex:1;min-width:0}.li .q{color:var(--soft)}.li .c{min-width:64px;text-align:right}.li.tot{font-size:1.1rem}
+.ib{width:40px;height:40px;padding:0;border:0;border-radius:10px;background:var(--peach);cursor:pointer;flex:none;font-size:.85rem}.ib.g{background:var(--rose)}.li .ib{align-self:center}
+details.panel>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;font:700 1.1rem Fraunces,Georgia,serif;min-height:32px}details.panel>summary::-webkit-details-marker{display:none}details.panel>summary::after{content:"▾";margin-left:auto;transition:transform .2s}details.panel[open]>summary::after{transform:rotate(180deg)}details.panel[open]>summary{margin-bottom:12px}
+.badge{background:var(--rose);border-radius:99px;padding:1px 10px;font:700 .8rem Nunito,sans-serif}
+.cup{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line)}.cup span{flex:1;min-width:0}.cup input{width:110px;text-align:right}.cup.miss input{border-color:var(--rust)}
+label{display:block;font-size:.85rem;font-weight:700;margin-bottom:4px;color:var(--soft)}
+input,select,textarea{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg)}
+input[type=checkbox]{width:auto}
+.chk{display:flex;gap:8px;align-items:center;font-weight:600;color:var(--ink);margin:6px 0}
+.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:12px}
+.line{display:grid;grid-template-columns:1fr 84px 110px 40px;gap:8px;margin-bottom:8px;align-items:center}
+.sl{display:grid;grid-template-columns:1fr 40px;gap:8px;margin-bottom:8px}
+@media(max-width:560px){.line{grid-template-columns:1fr 1fr 40px}.line>.dd:first-child{grid-column:1/-1}}
+.x{border:0;background:var(--rose);border-radius:10px;height:40px;cursor:pointer}
+.empty{text-align:center;padding:36px 12px;color:var(--soft)}
+.empty .hand{font-size:1.5rem;display:block}
+.note{font-family:Caveat,cursive;font-size:1.35rem;background:var(--butter);padding:10px 16px;border-radius:4px 14px 14px 14px;margin:12px 0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tip{border-left:4px solid var(--sage2);padding:4px 0 4px 12px;margin:10px 0}
+ol.st{margin:10px 0 0;padding:0;list-style:none;counter-reset:s}
+ol.st li{display:grid;grid-template-columns:34px 1fr;gap:8px;margin-bottom:12px}
+ol.st li::before{counter-increment:s;content:counter(s);width:30px;height:30px;border-radius:50%;background:var(--peach);display:grid;place-items:center;font-family:Fraunces,serif;font-weight:700}
+.tabs{display:flex;gap:6px;margin:14px 0}.tabs button{flex:1}
+.si{display:flex;align-items:center;gap:10px;background:var(--bg);border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:8px}.si input{width:22px;height:22px;flex:none;padding:0;accent-color:var(--sage2)}.sb{flex:1;min-width:0}.sb b{display:block;line-height:1.3}.sb small{color:var(--soft)}.chip{background:var(--sage);border-radius:12px;padding:4px 10px;font-size:.84rem;font-weight:700;text-align:center;max-width:48%}.si.done{opacity:.55}.si.done b{text-decoration:line-through}
+.pos{color:#5e8a4a}.neg{color:#b5574a}
+.pv img{max-width:200px;border-radius:14px;display:block;margin:8px 0}
+textarea{resize:none;display:block;min-height:44px;overflow:hidden}#bk{max-height:140px;overflow-y:auto}.sl textarea{min-width:0}
+.dd{min-width:0}.ddb{width:100%;display:flex;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);cursor:pointer;text-align:left;min-height:44px}.ddb span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ddb i{font-style:normal;color:var(--soft)}
+.ddl{display:none;position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:480px;max-height:60vh;overflow-y:auto;background:var(--paper);border:2px dashed var(--line);border-bottom:0;border-radius:22px 22px 0 0;padding:10px 10px calc(10px + env(safe-area-inset-bottom,0px));z-index:30}
+.dd.open .ddl{display:block}.dd.open::before{content:"";position:fixed;inset:0;background:#3a2c2055;z-index:29}
+.ddl button{display:block;width:100%;text-align:left;border:0;background:transparent;padding:13px 14px;border-radius:12px;cursor:pointer}.ddl button.sel{background:var(--sage);font-weight:700}.ddl button.sel::after{content:" ✓"}
+.hv{display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap}.si .hv input{width:90px;height:auto;padding:6px 8px;border:1.5px solid var(--line);border-radius:10px;background:var(--paper)}.hv .ib{width:34px;height:34px;font-size:1.1rem}.hv b{min-width:20px;text-align:center}.of{color:var(--soft);font-size:.85rem}
+[hidden]{display:none!important}
+html.lock,html.lock body{overflow:hidden}.ddl{overscroll-behavior:contain}.dd.open::before{touch-action:none}
+.ic{width:20px;height:20px;flex:none}.menu{display:grid;place-items:center}
+.ph{font:700 3rem Fraunces,Georgia,serif}div.hero{font:700 5rem Fraunces,Georgia,serif}
+header{border-bottom:1px solid var(--line)}aside{border-right:1px solid var(--line)}.ddl{border:1px solid var(--line);border-bottom:0}
+.panel{background:none;border:0;border-top:1.5px solid var(--line);border-radius:0;padding:16px 0 4px;margin-bottom:14px}
+.stat{border-radius:12px;padding:8px 12px}.stat strong{font-size:1.15rem}.stats{gap:8px}
+.si{background:none;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:12px 0;margin:0}
+.note{background:none;border-left:3px solid var(--sage2);border-radius:0;padding:4px 12px;font-size:1.25rem}
+.x{background:transparent;color:var(--soft);display:grid;place-items:center}
+.tb{border:0;background:transparent;color:var(--soft);font-weight:700;padding:8px 6px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}.tb.dg{color:var(--rust)}
+.tag{font:700 .68rem Nunito,sans-serif;color:var(--soft);border:1px solid var(--line);border-radius:6px;padding:0 6px;margin-left:8px;vertical-align:middle;text-transform:uppercase;letter-spacing:.04em}
+.seg{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden}.seg button{flex:1;border:0;background:var(--bg);padding:10px;cursor:pointer;font-weight:700;color:var(--soft)}.seg button.on{background:var(--sage);color:var(--ink)}
+.stp{display:flex;gap:6px;align-items:center}.stp input{text-align:center;min-width:0}.stp .ib{width:44px;height:44px;font-size:1.3rem}
+.rt{text-align:right;flex:none}.rt strong{display:block}.rt small{color:var(--soft)}
+.mx{position:fixed;inset:0;background:#3a2c2055;z-index:40}.ms{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:480px;background:var(--paper);border-radius:22px 22px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom,0px));z-index:41}.ms p{margin:0 0 14px;font:700 1.1rem Fraunces,Georgia,serif}.ms .row .btn{flex:1}.btn.dng{background:var(--rust);color:#fff}.mo{display:block;width:100%;text-align:left;border:0;background:transparent;padding:14px;border-radius:12px;font-weight:700;cursor:pointer}.mo.dng{color:var(--rust)}
+.ig{padding:14px 0;border-bottom:1px solid var(--line)}.ih{display:flex;align-items:center;gap:8px}.ih b{flex:1;min-width:0;font:700 1.1rem Fraunces,Georgia,serif}.ih .x{width:36px;height:36px;border:0;cursor:pointer;flex:none}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:10px 14px;margin:8px 0 0}.kv div{min-width:0}.kv dt{font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;color:var(--soft)}.kv dd{margin:0;font-weight:700}
+.rinde{font:700 1.8rem/1.1 Caveat,cursive;color:var(--rust);margin-top:4px}
+.bc{display:block;text-align:left;width:100%;background:var(--paper);border:1.5px solid var(--line);border-radius:16px 16px 16px 4px;padding:14px 16px;cursor:pointer}.bc b{display:block;font:700 1.1rem Fraunces,Georgia,serif}.bd{color:var(--soft);font-size:.9rem}.pg{height:6px;border-radius:9px;background:var(--line);margin:12px 0 8px;overflow:hidden}.pg i{display:block;height:100%;background:var(--sage2)}.bm{display:flex;justify-content:space-between;align-items:baseline}
+.ck{width:30px;height:30px;flex:none;border:2px solid var(--sage2);border-radius:9px;background:transparent;cursor:pointer;padding:0;display:grid;place-items:center}.ck[aria-checked=true]{background:var(--sage2)}.ck[aria-checked=true]::after{content:"✓";color:#fff;font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.rw{display:flex;justify-content:space-between;align-items:baseline;gap:12px}.rw b{flex:1;min-width:0}.pr{font-weight:700;flex:none}.fl{color:var(--soft);margin-top:2px}
+.li,.si,.ig,.cup{border-bottom:0;padding-left:12px;padding-right:12px;border-radius:12px}
+.li:not(.tot):nth-of-type(even),.si:nth-of-type(even),.ig:nth-of-type(even),.cup:nth-of-type(even){background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.li.tot{border-top:1.5px solid var(--line);border-radius:0}
+.panel{background:var(--paper);border:0;border-radius:18px;padding:18px;margin-bottom:14px}
+.note{background:var(--butter);border:0;border-radius:4px 14px 14px 14px;padding:10px 16px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<header><button class="menu" id="mb" aria-label="Abrir menú" onclick="drawer(1)"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><h1 id="ht">Mi recetario</h1></header>
+<div class="scrim" id="sc" onclick="drawer(0)"></div>
+<aside id="dr" aria-label="Secciones"><h2 class="brand" id="brand">Mi recetario</h2><div class="hand">recetas y costos</div>
+<nav id="nav"></nav></aside>
+<div id="mdl" hidden></div>
+<main id="v"></main>
+<script>
+const K='recetario-cafe-v1';let want=null,db,cfg,U,view='rec',sel=null,draft=null,dKey=null,editI=null,idr=null,shopR=null,buyEd=false,ak=null,q='';
+const BN={w:'g',v:'ml',p:'pza'},TN={w:'Peso',v:'Volumen',p:'Piezas'};
+const DU=()=>({g:{t:'w',f:1},kg:{t:'w',f:1000},oz:{t:'w',f:28.35},lb:{t:'w',f:453.6},ml:{t:'v',f:1},l:{t:'v',f:1000},taza:{t:'v',f:240},cucharada:{t:'v',f:15},cucharadita:{t:'v',f:5},'oz fl':{t:'v',f:29.57},pza:{t:'p',f:1},docena:{t:'p',f:12}});
+const seed=()=>({ing:[{id:'i1',n:'Harina de trigo',q:1,u:'kg',p:28,bulk:true,cup:120},{id:'i2',n:'Mantequilla',q:90,u:'g',p:24,bulk:false},{id:'i3',n:'Azúcar morena',q:1,u:'kg',p:36,bulk:true,cup:200},{id:'i4',n:'Huevo',q:30,u:'pza',p:95,bulk:true},{id:'i5',n:'Avena',q:500,u:'g',p:30,bulk:true},{id:'i6',n:'Leche',q:1,u:'l',p:26,bulk:false}],
+rec:[{id:'r1',n:'Galletas de avena',por:12,price:22,note:'Se conservan 5 días en recipiente cerrado.',img:'',steps:['Acremar la mantequilla con el azúcar.','Agregar el huevo y la leche.','Incorporar la harina y la avena.','Hornear a 180 °C por 12 minutos.'],items:[{i:'i1',q:150,u:'g'},{i:'i2',q:90,u:'g'},{i:'i3',q:100,u:'g'},{i:'i4',q:1,u:'pza'},{i:'i5',q:120,u:'g'},{i:'i6',q:0.5,u:'taza'}]}],cfg:{cafe:'Mi recetario',cur:'$',target:35,units:DU()}});
+try{db=JSON.parse(localStorage.getItem(K))}catch(e){}
+if(!db||!db.ing)db=seed();cfg=db.cfg;if(!cfg.units)cfg.units=DU();U=cfg.units;
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(db))}catch(e){}};
+const E=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const M=n=>{n=+n||0;const s=+cfg.round||0;if(s>0)n=Math.round(n/s)*s;const d=s>=1?0:2;return cfg.cur+n.toLocaleString('es-MX',{minimumFractionDigits:d,maximumFractionDigits:d})};
+const N=n=>(+(+n).toFixed(2)).toLocaleString('es-MX');
+const uid=()=>'x'+Math.random().toString(36).slice(2,9);
+const $v=id=>document.getElementById(id).value;
+const ing=id=>db.ing.find(x=>x.id===id);
+const uc=i=>i.p/(i.q*U[i.u].f),ub=g=>BN[U[g.u].t];
+const P=n=>cfg.cur+(+n).toLocaleString('es-MX',{maximumFractionDigits:3});
+const cupc=g=>{const t=U[g.u].t;return t==='v'?uc(g)*(U.taza||{f:240}).f:t==='w'&&g.cup>0?uc(g)*g.cup:null};
+const warn=c=>c.bad?`<div class="note">Falta convertir: ${[...new Set(c.bn)].map(E).join(', ')}<button class="btn sm" onclick="want='dg';go('cfg')">Configurar</button></div>`:'';
+const IC={book:'<path d="M4 5a2 2 0 0 1 2-2h13v15H6a2 2 0 0 0-2 2z"/><path d="M4 20h15"/>',plus:'<path d="M12 5v14M5 12h14"/>',cart:'<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l3 12h11l2-8H6"/>',basket:'<path d="M3 9h18l-2 11H5z"/><path d="M8 9l4-6 4 6"/>',swap:'<path d="M4 8h15l-4-4M20 16H5l4 4"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',dots:'<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>'};
+const ic=n=>`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]}</svg>`;
+const uof=g=>g?Object.keys(U).filter(u=>U[u].t===U[g.u].t).map(u=>[u,u]):uo();
+function need(l,g){const u=U[l.u]||U[ub(g)],b=l.q*u.f,t=u.t,gt=U[g.u].t;if(t===gt)return b;if(t==='p'||gt==='p')return null;const d=gt==='v'?1:g.cup>0?g.cup/240:0;if(!d)return null;return t==='v'?b*d:b/d}
+function calc(r){let t=0,bad=0,bn=[];r.items.forEach(l=>{const g=ing(l.i);if(!g)return;const n=need(l,g);if(n==null){bad++;bn.push(g.n)}else t+=n*uc(g)});const u=r.por>0?t/r.por:0,ut=r.price-u;
+return{t,u,ut,bad,bn,mg:r.price>0?ut/r.price*100:0,sg:cfg.target>0?u/(cfg.target/100):0,tu:ut*r.por}}
+const NAV=[['rec','book','Mis recetas'],['new','plus','Agregar receta'],['shop','cart','Compras'],['ing','basket','Ingredientes'],['info','swap','Convertidor'],['cfg','gear','Configuración']];
+function drawer(o){dr.classList.toggle('on',o===1);sc.classList.toggle('on',!!o);mb.setAttribute('aria-expanded',o===1)}
+function go(v,id){view=v;sel=id||null;drawer(0);if(v==='new'&&(!draft||dKey!==(id||''))){dKey=id||'';draft=id?JSON.parse(JSON.stringify(db.rec.find(r=>r.id===id))):{id:null,n:'',por:1,price:0,note:'',img:'',steps:[''],items:[{i:'',q:'',u:''}]};if(!draft.steps)draft.steps=[''];if(!draft.steps.length)draft.steps=['']}buyEd=false;render();scrollTo(0,0)}
+function render(){brand.textContent=cfg.cafe;ht.textContent=cfg.cafe;
+nav.innerHTML=NAV.map(n=>`<button class="${view===n[0]||(['det','plan'].includes(view)&&n[0]==='rec')||(view==='buy'&&n[0]==='shop')?'cur':''}" onclick="go('${n[0]}')">${ic(n[1])}${n[2]}</button>`).join('');
+v.innerHTML=({rec:vRec,det:vDet,new:vNew,ing:vIng,shop:vBuys,plan:vPlan,buy:vBuy,info:vInfo,cfg:vCfg})[view]();if(view==='rec')list();if(view==='new'){live();rs()}fit()}
+const TAPE=['--butter','--sage','--rose','--peach'],EM=['🥐','🍪','☕','🍰'];
+function list(){const t=q.toLowerCase(),rs=db.rec.filter(r=>r.n.toLowerCase().includes(t));
+lst.innerHTML=rs.length?rs.map((r,k)=>{const c=calc(r);return`<button class="card" style="--tape:var(${TAPE[k%4]})" onclick="go('det','${r.id}')">${r.img?`<img class="ph" src="${r.img}" alt="">`:`<div class="ph">${E((r.n||'?')[0])}</div>`}<div class="b"><h3>${E(r.n)}</h3><div class="pills"><span class="pill">${r.por} porciones</span><span class="pill">Costo ${M(c.u)}</span></div><div class="pills" style="margin-top:6px"><span class="pill">Precio ${M(r.price)}</span><span class="pill ${c.ut>=0?'pos':'neg'}">Utilidad ${M(c.ut)}</span></div></div></button>`}).join(''):`<div class="empty" style="grid-column:1/-1"><span class="hand">${db.rec.length?'Nada con ese nombre':'Tu recetario está vacío'}</span></div>`}
+const vRec=()=>`<div class="top"><div><h2>Mis recetas</h2><span class="hand">${db.rec.length} en el libro</span></div><button class="btn" onclick="go('new')">+ Agregar receta</button></div>
+<input type="search" placeholder="Buscar receta…" value="${E(q)}" oninput="q=this.value;list()" aria-label="Buscar receta" style="margin-bottom:22px"><div class="grid" id="lst"></div>`;
+function vDet(){const r=db.rec.find(x=>x.id===sel);if(!r){view='rec';return vRec()}const c=calc(r);
+const rows=r.items.map(l=>{const g=ing(l.i);if(!g)return'';const n=need(l,g);return`<div class="li"><span class="n">${E(g.n)}</span><span class="q">${N(l.q)} ${E(l.u||ub(g))}</span><b class="c">${n==null?'—':M(n*uc(g))}</b></div>`}).join('');
+const st=(r.steps||[]).filter(x=>x.trim());
+return`<div class="top"><button class="btn ghost sm" onclick="go('rec')">← Volver</button><button class="btn ghost sm" aria-label="Más opciones" onclick="rmenu('${r.id}')">${ic('dots')}</button></div>
+${r.img?`<img class="hero" src="${r.img}" alt="${E(r.n)}">`:`<div class="hero">${E((r.n||'?')[0])}</div>`}
+<h2 style="font-size:2rem">${E(r.n)}</h2><div class="rinde">rinde ${r.por} porciones</div>
+<div class="stats"><div class="stat s0"><small>Costo total</small><strong>${M(c.t)}</strong></div><div class="stat s1"><small>Costo por porción</small><strong>${M(c.u)}</strong></div><div class="stat s2"><small>Precio de venta</small><strong>${M(r.price)}</strong></div><div class="stat s3"><small>Utilidad por porción</small><strong>${M(c.ut)}</strong></div></div>
+${warn(c)}
+<div class="two"><div class="panel"><h3>Ingredientes</h3>${rows}<div class="li tot"><b class="n">Total</b><b class="c">${M(c.t)}</b></div></div>
+<div class="panel"><h3>Preparación</h3>${st.length?`<ol class="st">${st.map(x=>`<li><span>${E(x)}</span></li>`).join('')}</ol>`:'<p style="color:var(--soft)">Aún no hay pasos. Agrégalos desde Editar.</p>'}</div></div>
+<div class="panel"><h3>Precio y utilidad</h3><div class="li"><span class="n">Utilidad por porción</span><b class="c ${c.ut>=0?'pos':'neg'}">${M(c.ut)} · ${c.mg.toFixed(0)}%</b></div><div class="li"><span class="n">Utilidad de la tanda</span><b class="c">${M(c.tu)}</b></div><div class="li"><span class="n">Precio sugerido (${cfg.target}%)</span><b class="c">${M(c.sg)}</b></div></div>
+${r.note?`<div class="note">${E(r.note)}</div>`:''}`}
+const fr=(n,g)=>{const b=ub(g);return b==='g'&&n>=1000?N(n/1000)+' kg':b==='ml'&&n>=1000?N(n/1000)+' l':N(n)+' '+b};
+const HV=()=>{db.have=db.have||{};return db.have[sel]=db.have[sel]||{}};
+const bc=i=>i.bulk?i.m/i.size*i.up:i.m*i.up;
+const bl=i=>i.bulk?i.lab:`${i.m} ${i.m>1?'paquetes':'paquete'} de ${E(i.pu)}`;
+const dfm=d=>new Date(d+'T12:00').toLocaleDateString('es-MX',{day:'numeric',month:'long'});
+const gb=()=>(db.buys||[]).find(b=>b.id===sel);
+function hv(id,d){const H=HV();H[id]=Math.max(0,(+H[id]||0)+d);save();render()}
+function hs(id,v){HV()[id]=Math.max(0,+v||0);save();render()}
+function plan(r){const H=HV(),agg={};r.items.forEach(l=>{const g=ing(l.i);if(!g)return;const n=need(l,g);agg[g.id]=(agg[g.id]||0)+(n||0)});
+return Object.keys(agg).map(id=>{const g=ing(id),n=agg[id],have=+H[id]||0,size=g.q*U[g.u].f;let m,lab,cost,ctl;
+if(g.bulk){m=Math.max(0,n-have);lab=fr(m,g);cost=m/size*g.p;ctl=`<span class="of">Ya tengo</span><input type="number" min="0" step="any" inputmode="decimal" placeholder="0" value="${have||''}" aria-label="Tengo de ${E(g.n)}" onchange="hs('${id}',this.value)"><span class="of">${ub(g)}</span>`}
+else{const pk=Math.ceil(n/size-1e-9);m=Math.max(0,pk-have);lab=`${m} ${m>1?'paquetes':'paquete'} de ${N(g.q)} ${E(g.u)}`;cost=m*g.p;ctl=`<span class="of">Ya tengo</span><button class="ib" aria-label="Menos" onclick="hv('${id}',-1)">−</button><b>${have}</b><button class="ib" aria-label="Más" onclick="hv('${id}',1)">+</button>`}
+return{g,m,size,lab,cost,ctl,full:m<=1e-9}}).sort((a,b)=>a.full-b.full)}
+function vPlan(){const r=db.rec.find(x=>x.id===sel);if(!r){view='rec';return vRec()}const its=plan(r),tot=its.reduce((a,x)=>a+x.cost,0);
+return`<div class="top"><button class="btn ghost sm" onclick="go('det','${r.id}')">← Volver</button></div><h2>Lista de compras</h2><div class="rinde">${E(r.n)}</div>
+<div style="margin-top:12px">${its.map(x=>`<div class="si ${x.full?'done':''}"><div class="sb"><div class="rw"><b>${E(x.g.n)}</b><span class="pr">${x.full?'':M(x.cost)}</span></div><div class="fl">${x.full?'Ya lo tienes':'Comprar '+x.lab}</div><div class="hv">${x.ctl}</div></div></div>`).join('')}</div>
+<div class="stat s1" style="margin-top:14px"><small>Total</small><strong>${M(tot)}</strong></div><button class="btn" style="width:100%;margin-top:14px" ${its.some(x=>!x.full)?'':'disabled'} onclick="mkBuy()">Crear compra</button>`}
+function mkBuy(){const t=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);sh(`<p>Fecha de la compra</p><input type="date" id="bd" value="${t}" style="margin-bottom:14px"><div class="row"><button class="btn ghost" onclick="ask0()">Cancelar</button><button class="btn" onclick="addBuy()">Crear</button></div>`)}
+function addBuy(){const r=db.rec.find(x=>x.id===sel),d=$v('bd');if(!r||!d)return;const items=plan(r).filter(x=>!x.full).map(x=>({i:x.g.id,n:x.g.n,bulk:!!x.g.bulk,m:x.m,size:x.size,pu:`${N(x.g.q)} ${x.g.u}`,up:x.g.p,lab:x.lab,done:false}));
+db.buys=db.buys||[];const id=uid();db.buys.unshift({id,rid:r.id,n:r.n,d,items});if(db.have)delete db.have[r.id];save();ask0();go('buy',id)}
+function vBuys(){const b=db.buys||[];return`<div class="top"><div><h2>Compras</h2></div></div>${b.length?`<div class="grid">${b.map(x=>{const dn=x.items.filter(i=>i.done).length,t=x.items.reduce((a,i)=>a+bc(i),0);return`<button class="bc" onclick="go('buy','${x.id}')"><b>${E(x.n)}</b><span class="bd">${dfm(x.d)}</span><div class="pg"><i style="width:${x.items.length?dn/x.items.length*100:0}%"></i></div><div class="bm"><span>${dn} de ${x.items.length}</span><strong>${M(t)}</strong></div></button>`}).join('')}</div>`:'<div class="empty"><span class="hand">Aún no hay compras</span></div>'}`}
+function vBuy(){const x=gb();if(!x){view='shop';return vBuys()}const t=x.items.reduce((a,i)=>a+bc(i),0),p=x.items.filter(i=>!i.done).reduce((a,i)=>a+bc(i),0);
+return`<div class="top"><button class="btn ghost sm" onclick="go('shop')">← Compras</button>${buyEd?'<button class="btn" style="padding:12px 28px;font-size:1.05rem" onclick="buyEd=false;render()">Listo</button>':`<button class="btn ghost sm" aria-label="Más opciones" onclick="bmenu('${x.id}')">${ic('dots')}</button>`}</div>
+<h2>${E(x.n)}</h2><div class="rinde">${dfm(x.d)}</div>
+<div style="margin-top:12px">${x.items.map((i,k)=>`<div class="si ${i.done?'done':''}"><button class="ck" role="checkbox" aria-checked="${i.done}" aria-label="Comprado: ${E(i.n)}" onclick="tg(${k})"></button><div class="sb"><div class="rw"><b>${E(i.n)}</b><span class="pr">${M(bc(i))}</span></div><div class="fl">${bl(i)}</div>${buyEd?`<div class="hv"><span class="of" style="font-weight:700;color:var(--ink);font-size:.95rem">Nuevo precio de ${E(i.pu)}</span><input type="number" min="0" step="any" inputmode="decimal" value="${i.up}" onchange="sup(${k},this.value)"></div>`:''}</div></div>`).join('')}</div>
+<div class="stats"><div class="stat s1"><small>Pendiente</small><strong>${M(p)}</strong></div><div class="stat s0"><small>Total</small><strong>${M(t)}</strong></div></div>`}
+function tg(k){const x=gb();x.items[k].done=!x.items[k].done;save();render()}
+function sup(k,v){gb().items[k].up=Math.max(0,+v||0);save();render()}
+function pushP(){gb().items.forEach(i=>{const g=ing(i.i);if(g)g.p=i.up});save();render()}
+function bmenu(id){sh(`<button class="mo" onclick="ask0();buyEd=true;render()">Editar precios</button><button class="mo dng" onclick="ask0();ask('¿Eliminar esta compra?',()=>delBuy('${id}'))">Eliminar compra</button>`)}
+function delBuy(id){db.buys=(db.buys||[]).filter(b=>b.id!==id);save();go('shop')}
+function rmenu(id){sh(`<button class="mo" onclick="ask0();go('plan','${id}')">Lista de compras</button><button class="mo" onclick="ask0();go('new','${id}')">Editar receta</button><button class="mo dng" onclick="ask0();ask('¿Eliminar esta receta?',()=>delRec('${id}'))">Eliminar receta</button>`)}
+function imenu(id){sh(`<button class="mo" onclick="ask0();editI='${id}';idr=null;render();scrollTo(0,0)">Editar ingrediente</button><button class="mo dng" onclick="ask0();ask('¿Eliminar este ingrediente?',()=>delIng('${id}'))">Eliminar ingrediente</button>`)}
+function delRec(id){db.rec=db.rec.filter(x=>x.id!==id);if(db.have)delete db.have[id];save();go('rec')}
+function vNew(){const d=draft;return`<div class="top"><div><h2>${d.id?'Editar receta':'Agregar receta'}</h2></div></div>
+<div class="panel"><div class="f"><div style="grid-column:1/-1"><label for="dn">Nombre</label><input id="dn" value="${E(d.n)}" oninput="draft.n=this.value" placeholder="Ej. Pan de plátano"></div>
+<div><label for="dp">Porciones</label><div class="stp"><button type="button" class="ib" aria-label="Menos" onclick="por(-1)">−</button><input id="dp" type="number" inputmode="numeric" min="1" value="${d.por}" oninput="draft.por=+this.value;live()"><button type="button" class="ib" aria-label="Más" onclick="por(1)">+</button></div></div>
+<div><label for="dv">Precio por porción</label><input id="dv" type="number" min="0" step="any" value="${d.price}" oninput="draft.price=+this.value;live()"></div></div>
+<label for="df">Foto de la receta</label><input id="df" type="file" accept="image/*" onchange="pic(this)"><div class="pv" id="pv">${prev()}</div></div>
+<div class="panel"><h3 style="margin-bottom:10px">Ingredientes</h3>
+${db.ing.length?'':'<div class="empty"><span class="hand">Aún no hay ingredientes</span><button class="btn alt" onclick="go(\'ing\')">Agregar ingredientes</button></div>'}
+<div id="ls">${d.items.map(ln).join('')}</div>
+<button class="btn alt sm" style="width:100%" onclick="draft.items.push({i:'',q:'',u:''});rl()">+ Añadir ingrediente</button>
+<div class="stats" id="lv"></div><div style="margin-top:28px"><button class="tb" onclick="go('ing')">Crear ingrediente nuevo</button></div></div>
+<div class="panel"><h3 style="margin-bottom:10px">Pasos de preparación</h3><div id="sts"></div><button class="btn alt sm" style="width:100%" onclick="draft.steps.push('');rs()">+ Añadir paso</button>
+<label for="dt" style="margin-top:14px">Notas</label><textarea id="dt" rows="2" oninput="draft.note=this.value;gw(this)">${E(d.note)}</textarea></div>
+<p id="er" class="neg" role="alert"></p><div class="row"><button class="btn" onclick="saveRec()">Guardar receta</button><button class="btn ghost" onclick="draft=null;go('rec')">Cancelar</button></div>`}
+const prev=()=>draft.img?`<img src="${draft.img}" alt="Vista previa"><button class="btn ghost sm" onclick="draft.img='';pv.innerHTML=prev()">Quitar foto</button>`:'';
+function pic(inp){const f=inp.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,700/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);draft.img=c.toDataURL('image/jpeg',.75);pv.innerHTML=prev()};im.src=rd.result};rd.readAsDataURL(f)}
+const ln=(l,k)=>{const g=ing(l.i),o=uof(g);if(g&&!o.some(x=>x[0]===l.u))l.u=g.u;return`<div class="line">${dd('',db.ing.map(i=>[i.id,i.n]),l.i,'pick('+k+',this.value)','Elegir ingrediente…')}<input type="number" min="0" step="any" placeholder="Cant." aria-label="Cantidad" value="${l.q}" oninput="draft.items[${k}].q=+this.value;live()">${dd('',o,l.u||'g','draft.items['+k+'].u=this.value;live()')}<button class="x" aria-label="Opciones del ingrediente" onclick="ask('¿Quitar este ingrediente?',()=>{draft.items.splice(${k},1);rl()},'Quitar')">${ic('dots')}</button></div>`};
+function pick(k,id){draft.items[k].i=id;const g=ing(id);draft.items[k].u=g?g.u:'';rl()}
+function rl(){ls.innerHTML=draft.items.map(ln).join('');live()}
+function rs(){sts.innerHTML=draft.steps.map((s,k)=>`<div class="sl"><textarea rows="2" aria-label="Paso ${k+1}" placeholder="Paso ${k+1}" oninput="draft.steps[${k}]=this.value;gw(this)">${E(s)}</textarea><button class="x" aria-label="Opciones del paso" onclick="ask('¿Quitar este paso?',()=>{draft.steps.splice(${k},1);if(!draft.steps.length)draft.steps=[''];rs()},'Quitar')">${ic('dots')}</button></div>`).join('');fit()}
+function live(){const c=calc(draft);lv.innerHTML=`<div class="stat s0"><small>Costo total</small><strong>${M(c.t)}</strong></div><div class="stat s1"><small>Costo por porción</small><strong>${M(c.u)}</strong></div><div class="stat s3"><small>Utilidad por porción</small><strong>${M(c.ut)}</strong></div><div class="stat s2"><small>Precio sugerido</small><strong>${M(c.sg)}</strong></div>`+(c.bad?`<div style="grid-column:1/-1">${warn(c)}</div>`:'')}
+function saveRec(){const d=draft;d.items=d.items.filter(l=>l.i&&l.q>0).map(l=>({...l,u:l.u||ub(ing(l.i))}));d.steps=d.steps.filter(s=>s.trim());
+if(!d.n.trim()||!(d.por>0)||!d.items.length){er.textContent='Escribe un nombre, las porciones y al menos un ingrediente con cantidad.';return}
+d.n=d.n.trim();if(d.id){db.rec=db.rec.map(r=>r.id===d.id?d:r)}else{d.id=uid();db.rec.push(d)}save();draft=null;go('det',d.id)}
+function armDel(b,f){if(b.dataset.a){f();return}b.dataset.a=1;const t=b.textContent;b.textContent=b.classList.contains('ib')?'¿Sí?':'¿Seguro?';setTimeout(()=>{if(b.isConnected){delete b.dataset.a;b.textContent=t}},3500)}
+function vIng(){const e=idr||db.ing.find(i=>i.id===editI)||{n:'',q:'',u:'g',p:'',bulk:false};
+return`<div class="top"><div><h2>Ingredientes</h2></div></div>
+<div class="panel"><h3 style="margin-bottom:10px">${editI?'Editar ingrediente':'Nuevo ingrediente'}</h3><div class="f"><div style="grid-column:1/-1"><label for="in">Nombre</label><input id="in" value="${E(e.n)}" oninput="ci()"></div><div><label for="iq">Cantidad</label><input id="iq" type="number" min="0" step="any" value="${e.q}" oninput="ci()"></div><div><label for="iu">Unidad</label>${dd('iu',uo(),e.u,'ci()')}</div><div><label for="ip">Precio</label><input id="ip" type="number" min="0" step="any" value="${e.p}" oninput="ci()"></div><div><label>Tipo</label><div class="seg" id="ibs"><button type="button" class="${e.bulk?'':'on'}" data-b="0" onclick="sg(this)">Paquete</button><button type="button" class="${e.bulk?'on':''}" data-b="1" onclick="sg(this)">Granel</button></div></div></div>
+<p id="er" class="neg" role="alert"></p><div class="row"><button class="btn" onclick="saveIng()">${editI?'Guardar cambios':'Agregar'}</button>${editI?'<button class="btn ghost" onclick="editI=null;idr=null;render()">Cancelar</button>':''}</div></div>
+<div class="panel">${db.ing.length?db.ing.map(i=>{const cp=cupc(i);return`<div class="ig"><div class="ih"><b>${E(i.n)}</b><button class="x" aria-label="Opciones de ${E(i.n)}" onclick="imenu('${i.id}')">${ic('dots')}</button></div><dl class="kv"><div><dt>Presentación</dt><dd>${N(i.q)} ${E(i.u)}</dd></div><div><dt>Precio</dt><dd>${M(i.p)}</dd></div><div><dt>Por ${ub(i)}</dt><dd>${P(uc(i))}</dd></div>${cp==null?'':`<div><dt>Por taza</dt><dd>${P(cp)}</dd></div>`}<div><dt>Compra</dt><dd>${i.bulk?'A granel':'Paquete'}</dd></div></dl></div>`}).join(''):'<div class="empty"><span class="hand">Sin ingredientes todavía</span></div>'}</div>`}
+function saveIng(){const n=$v('in').trim(),q=+$v('iq'),p=+$v('ip'),u=$v('iu'),cup=(ing(editI)||{}).cup||0,bulk=ibs.querySelector('.on').dataset.b==='1';if(!n||!(q>0)||$v('ip')===''||!(p>=0)){er.textContent='Completa nombre, cantidad y precio.';return}
+if(editI)db.ing=db.ing.map(i=>i.id===editI?{id:i.id,n,q,u,p,bulk,cup}:i);else db.ing.push({id:uid(),n,q,u,p,bulk,cup});editI=null;idr=null;save();render()}
+function delIng(id){if(db.rec.some(r=>r.items.some(l=>l.i===id))){alert('Este ingrediente se usa en una receta. Quítalo de la receta primero.');return}db.ing=db.ing.filter(i=>i.id!==id);editI=null;idr=null;save();render()}
+function vInfo(){return`<div class="top"><div><h2>Convertidor</h2></div></div>
+<div class="panel"><div class="f"><div><label for="ca">Cantidad</label><input id="ca" type="number" step="any" oninput="cv()"></div><div><label for="cu">De</label>${dd('cu',uo(),'kg','cv()')}</div><div><label for="cw">A</label>${dd('cw',uo(),'g','cv()')}</div></div><div class="note" id="cr">—</div></div>`}
+function cv(){const a=+$v('ca'),x=U[$v('cu')],y=U[$v('cw')];cr.textContent=!a?'—':x.t!==y.t?'Estas unidades no son del mismo tipo.':N(a*x.f/y.f)+' '+$v('cw')}
+function vCfg(){const ks=Object.keys(U),o=id=>want===id?' open':'',w=db.ing.filter(i=>U[i.u].t==='w'),miss=w.filter(i=>!(i.cup>0)).length;want=null;return`<div class="top"><div><h2>Configuración</h2></div></div>
+<div class="panel"><div class="f"><div><label for="cn">Nombre</label><input id="cn" value="${E(cfg.cafe)}"></div><div><label for="cm">Moneda</label><input id="cm" maxlength="4" value="${E(cfg.cur)}"></div><div><label for="ct">Costo objetivo %</label><input id="ct" type="number" min="1" max="100" value="${cfg.target}"></div><div><label for="cr">Redondear costos</label>${dd('cr',[['0','Sin redondeo'],['0.5',cfg.cur+'0.50'],['1',cfg.cur+'1'],['5',cfg.cur+'5']],String(cfg.round||0))}</div></div><div class="row"><button class="btn" onclick="saveCfg()">Guardar</button><span id="ok" class="hand"></span></div></div>
+<details class="panel" id="dg"${o('dg')}><summary>Gramos por taza${miss?`<span class="badge">${miss}</span>`:''}</summary>${w.length?w.map(i=>`<div class="cup ${i.cup>0?'':'miss'}"><span>${E(i.n)}</span><input type="number" min="0" step="any" inputmode="decimal" placeholder="g" aria-label="Gramos por taza de ${E(i.n)}" value="${i.cup||''}" oninput="ing('${i.id}').cup=+this.value;this.parentNode.classList.toggle('miss',!(+this.value>0));save()"> g</div>`).join(''):'<div class="empty">—</div>'}</details>
+<details class="panel" id="du"${o('du')}><summary>Unidades</summary><div class="f"><div><label for="un">Nombre</label><input id="un" placeholder="vaso"></div><div><label for="ut">Tipo</label>${dd('ut',Object.keys(TN).map(t=>[t,TN[t]]),'w')}</div><div><label for="uf">Equivale a</label><input id="uf" type="number" min="0" step="any"></div></div><p id="eu" class="neg" role="alert"></p><button class="btn alt" onclick="saveUnit()">Guardar unidad</button><div style="margin-top:12px">${ks.map((k,j)=>`<div class="li"><b class="n">${E(k)}</b><span class="q">${N(U[k].f)} ${BN[U[k].t]}</span><button class="tb" onclick="editU(${j})">Editar</button>${Object.values(BN).includes(k)?'':`<button class="tb dg" onclick="ask('¿Quitar esta unidad?',()=>delUnit(${j}),'Quitar')">Quitar</button>`}</div>`).join('')}</div></details>
+<details class="panel" id="dk"${o('dk')}><summary>Respaldo</summary><textarea id="bk" rows="4" onfocus="this.select()">${E(JSON.stringify(db))}</textarea><p id="er" class="neg" role="alert"></p><div class="row"><button class="btn alt" onclick="loadBk()">Cargar respaldo</button><button class="btn ghost" onclick="armDel(this,()=>{db=seed();cfg=db.cfg;U=cfg.units;save();render()})">Restablecer ejemplo</button></div></details>`}
+function editU(j){const k=Object.keys(U)[j];un.value=k;ddset('ut',U[k].t);uf.value=U[k].f;un.focus()}
+function saveUnit(){const n=un.value.trim(),f=+uf.value,t=ut.value;if(!n||!(f>0)){eu.textContent='Escribe un nombre y una equivalencia mayor a 0.';return}
+if(Object.values(BN).includes(n)){eu.textContent='Las unidades base (g, ml, pza) no se pueden cambiar.';return}U[n]={t,f};save();want='du';render()}
+function delUnit(j){const k=Object.keys(U)[j];if(db.ing.some(i=>i.u===k)||db.rec.some(r=>r.items.some(l=>l.u===k))){eu.textContent=`“${k}” está en uso en un ingrediente o una receta.`;return}delete U[k];save();want='du';render()}
+function saveCfg(){cfg.cafe=$v('cn').trim()||'Mi recetario';cfg.cur=$v('cm')||'$';cfg.target=+$v('ct')||35;cfg.round=+$v('cr')||0;save();render();ok.textContent='¡Guardado!'}
+function loadBk(){try{const d=JSON.parse($v('bk'));if(!d.ing||!d.rec||!d.cfg)throw 0;if(!d.cfg.units)d.cfg.units=DU();db=d;cfg=d.cfg;U=cfg.units;save();render()}catch(e){er.textContent='El texto no es un respaldo válido.'}}
+const uo=()=>Object.keys(U).map(u=>[u,u]);
+const dd=(id,opts,val,ch,ph)=>{const cur=opts.find(o=>o[0]===val);return`<div class="dd"><input type="hidden"${id?` id="${id}"`:''} value="${E(val)}"${ch?` onchange="${ch}"`:''}><button type="button" class="ddb" aria-haspopup="listbox" onclick="ddt(this)"><span>${cur?E(cur[1]):ph||'Elegir…'}</span><i>▾</i></button><div class="ddl" role="listbox">${opts.map(o=>`<button type="button" class="${o[0]===val?'sel':''}" data-v="${E(o[0])}" onclick="ddp(this)">${E(o[1])}</button>`).join('')}</div></div>`};
+const lk=()=>document.documentElement.classList.toggle('lock',!!document.querySelector('.dd.open')||!mdl.hidden);
+const cl=()=>{document.querySelectorAll('.dd.open').forEach(x=>x.classList.remove('open'));lk()};
+function ddt(b){const d=b.closest('.dd'),o=!d.classList.contains('open');cl();d.classList.toggle('open',o);lk();if(o){const x=d.querySelector('.sel');if(x)x.scrollIntoView({block:'center'})}}
+function ddp(b){const d=b.closest('.dd'),h=d.querySelector('input');h.value=b.dataset.v;d.querySelector('.ddb span').textContent=b.textContent;d.querySelectorAll('.ddl button').forEach(x=>x.classList.toggle('sel',x===b));d.classList.remove('open');lk();h.dispatchEvent(new Event('change'))}
+function ddset(id,v){const h=document.getElementById(id),d=h.closest('.dd');h.value=v;d.querySelectorAll('.ddl button').forEach(x=>{const k=x.dataset.v===v;x.classList.toggle('sel',k);if(k)d.querySelector('.ddb span').textContent=x.textContent})}
+const gw=t=>{if(t.scrollHeight){t.style.height='auto';t.style.height=t.scrollHeight+'px'}},fit=()=>document.querySelectorAll('textarea:not(#bk)').forEach(gw);
+addEventListener('click',e=>{if(!e.target.closest('.ddb,.ddl'))cl()});
+addEventListener('keydown',e=>{if(e.key==='Escape'){drawer(0);cl();ask0()}});
+function sh(h){mdl.innerHTML=`<div class="mx" onclick="ask0()"></div><div class="ms">${h}</div>`;mdl.hidden=false;lk()}
+function ask(m,f,b){ak=f;sh(`<p>${E(m)}</p><div class="row"><button class="btn ghost" onclick="ask0()">Cancelar</button><button class="btn dng" onclick="const f=ak;ask0();f()">${b||'Eliminar'}</button></div>`)}
+function ask0(){mdl.hidden=true;mdl.innerHTML='';lk()}
+function por(d){draft.por=Math.max(1,Math.round((+draft.por||0)+d));dp.value=draft.por;live()}
+function ci(){idr={n:$v('in'),q:$v('iq'),u:$v('iu'),p:$v('ip'),bulk:ibs.querySelector('.on').dataset.b==='1'}}
+function sg(b){b.parentNode.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));ci()}
+render();
+</script></body></html>

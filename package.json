@@ -1,0 +1,26 @@
+{
+  "name": "mi-recetario",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mi recetario — recetas, costos y listas de compras",
+  "license": "UNLICENSED",
+  "scripts": {
+    "fonts": "node scripts/fetch-fonts.mjs",
+    "icons": "python scripts/make-icons.py",
+    "sync": "cap sync android",
+    "open:android": "cap sync android && cap open android",
+    "build:apk": "cap sync android && cd android && gradlew.bat assembleDebug",
+    "build:apk:ci": "cap sync android && cd android && ./gradlew assembleDebug",
+    "serve": "node scripts/serve.mjs",
+    "test": "node tests/smoke.mjs && node tests/native.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.5.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.3",
+    "jsdom": "^30.1.3"
+  }
+}

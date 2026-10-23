@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Colores de marca (sustituyen a los de la librería de Capacitor). -->
+<resources>
+    <color name="colorPrimary">#DBE5CF</color>
+    <color name="colorPrimaryDark">#F8EFE0</color>
+    <color name="colorAccent">#C98B6A</color>
+</resources>

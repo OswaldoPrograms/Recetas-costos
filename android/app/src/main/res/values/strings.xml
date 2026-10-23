@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Mi recetario</string>
+    <string name="title_activity_main">Mi recetario</string>
+    <string name="package_name">com.mirecetario.app</string>
+    <string name="custom_url_scheme">com.mirecetario.app</string>
+</resources>

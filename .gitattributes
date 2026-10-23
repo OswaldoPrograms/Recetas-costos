@@ -1,0 +1,19 @@
+# Normaliza los finales de línea para que el proyecto funcione igual en
+# Windows, macOS y Linux (GitHub Actions usa Linux).
+* text=auto
+
+# Los scripts de Unix deben conservar LF y permiso de ejecución
+gradlew text eol=lf
+*.sh text eol=lf
+
+# Los de Windows, CRLF
+*.bat text eol=crlf
+
+# Binarios: no tocar
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.jar binary
+*.woff2 binary
+*.keystore binary
+*.jks binary
