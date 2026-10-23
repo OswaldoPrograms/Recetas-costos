@@ -237,6 +237,7 @@ en un correo o nota. Para restaurar, pégalo y pulsa **Cargar respaldo**.
 | El Action falla en `npm ci` | Borra `package-lock.json`, haz `npm install` y vuelve a subirlo |
 | Android bloquea la instalación | Ajustes → permitir instalar apps de esa fuente; o `adb install` |
 | `cap sync` no encuentra `www` | Ejecuta los comandos desde la raíz del proyecto |
+| `Failed to find package 'tools'` en el Action | `setup-android` pedía ese paquete, ya retirado del SDK. El workflow fija `packages: platform-tools`; no lo quites |
 
 ---
 

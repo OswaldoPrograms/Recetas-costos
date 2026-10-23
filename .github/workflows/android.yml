@@ -44,9 +44,15 @@ jobs:
 
       - name: Configurar Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          # El paquete heredado "tools" ya no se publica en el repositorio del
+          # SDK: si se deja el valor por defecto, sdkmanager falla.
+          packages: "platform-tools"
 
-      - name: Aceptar licencias del SDK
-        run: yes | sdkmanager --licenses > /dev/null 2>&1 || true
+      - name: Aceptar licencias e instalar la plataforma
+        run: |
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
+          sdkmanager "platforms;android-36" "build-tools;36.0.0"
 
       - name: Instalar dependencias
         run: |
@@ -96,9 +102,15 @@ jobs:
 
       - name: Configurar Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          # El paquete heredado "tools" ya no se publica en el repositorio del
+          # SDK: si se deja el valor por defecto, sdkmanager falla.
+          packages: "platform-tools"
 
-      - name: Aceptar licencias del SDK
-        run: yes | sdkmanager --licenses > /dev/null 2>&1 || true
+      - name: Aceptar licencias e instalar la plataforma
+        run: |
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
+          sdkmanager "platforms;android-36" "build-tools;36.0.0"
 
       - name: Instalar dependencias
         run: |

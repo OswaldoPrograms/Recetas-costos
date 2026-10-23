@@ -3,8 +3,8 @@ apply plugin: 'com.android.application'
 // La versión se puede sobrescribir al compilar:
 //   ./gradlew assembleRelease -PVERSION_NAME=1.2.0 -PVERSION_CODE=12
 // (en GitHub Actions se toma del tag, ver .github/workflows/android.yml)
-def appVersionCode = project.findProperty("VERSION_CODE")
-def appVersionName = project.findProperty("VERSION_NAME")
+def appVersionCode = project.hasProperty("VERSION_CODE") ? project.property("VERSION_CODE").toInteger() : 1
+def appVersionName = project.hasProperty("VERSION_NAME") ? project.property("VERSION_NAME") : "1.0"
 
 android {
     namespace = "com.mirecetario.app"
@@ -13,8 +13,8 @@ android {
         applicationId "com.mirecetario.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode appVersionCode ? appVersionCode.toInteger() : 1
-        versionName appVersionName ?: "1.0"
+        versionCode appVersionCode
+        versionName appVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
